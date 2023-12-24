@@ -2,13 +2,15 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Stack, Fab, IconButton, List, ListItem, ListItemText, Grid, Tooltip, Divider } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 const App = () => {
 
 
     const [data, setData] = useState({ exp_name: "", price: "" });
     const [arr, setArr] = useState([{ exp_name: "", price: "" }]);
-
+    const [isupdate, setIsUpdate] = useState(false);
+    const [id, setId] = useState(null);
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -25,8 +27,18 @@ const App = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setArr([...arr, { exp_name: data.exp_name, price: data.price }]);
-        setData({ exp_name: "", price: "" })
+        if (!isupdate) {
+            setArr([...arr, { exp_name: data.exp_name, price: data.price }]);
+            setData({ exp_name: "", price: "" });
+        } else {
+            setArr((prevArr) => prevArr.map((e, i) => {
+                if (i == id) {
+                    return { ...e, exp_name: data.exp_name, price: data.price };
+                }
+            }));
+            setData({ exp_name: "", price: "" });
+            setIsUpdate(false)
+        }
 
     }
 
@@ -34,6 +46,19 @@ const App = () => {
 
         setArr((prevArr) => prevArr.filter((e, i) => i != id));
 
+
+    }
+
+    const handleUpdate = (id) => {
+        const exp = arr.filter((e, i) => {
+            if (i == id) {
+                return e
+            }
+        });
+        console.log(exp)
+        setData({ exp_name: exp[0].exp_name, price: exp[0].price });
+        setIsUpdate(true);
+        setId(id)
 
     }
 
@@ -71,7 +96,12 @@ const App = () => {
                                                     primary={item.price}
                                                 />
                                                 <Tooltip title="Delete" placement="top">
-                                                    <IconButton color="error" onClick={() => handleDel(index)}>  <DeleteIcon />  </IconButton> </Tooltip>
+                                                    <IconButton color="error" onClick={() => handleDel(index)}>  <DeleteIcon />  </IconButton>
+                                                </Tooltip>
+
+                                                <Tooltip title="Edit" placement="top">
+                                                    <IconButton color="error" onClick={() => handleUpdate(index)}><EditIcon /></IconButton>
+                                                </Tooltip>
                                             </ListItem>
                                         </List>
                                         <Divider />
