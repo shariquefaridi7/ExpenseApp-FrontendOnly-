@@ -42,7 +42,7 @@ const App = () => {
     return (
         <><center>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={{ xs: 2, sm: 2 }}
-                sx={{ display: "inline-flex", mt: 2, bgcolor: "#FFECD6", p: 3, mb: 3, borderRadius: 5 }}
+                sx={{ display: "inline-flex", mt: 2, bgcolor: "#FFECD6", p: 3, mb: 3, borderRadius: 5, textAlign: "center" }}
             >
 
                 <TextField label="ExpenseName" type="text" color="secondary" size="small" name="expense" value={data.exp_name} onChange={handleChange} />
