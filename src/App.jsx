@@ -34,10 +34,14 @@ const App = () => {
             setArr((prevArr) => prevArr.map((e, i) => {
                 if (i == id) {
                     return { ...e, exp_name: data.exp_name, price: data.price };
+                } else {
+                    return e;
                 }
+
             }));
             setData({ exp_name: "", price: "" });
             setIsUpdate(false)
+
         }
 
     }
@@ -89,11 +93,11 @@ const App = () => {
                                         <List sx={{ bgcolor: "skyblue", borderRadius: 5 }} >
                                             <ListItem  >
                                                 <ListItemText
-                                                    primary={item.exp_name}
+                                                    primary={item?.exp_name}
 
                                                 />
                                                 <ListItemText
-                                                    primary={item.price}
+                                                    primary={item?.price}
                                                 />
                                                 <Tooltip title="Delete" placement="top">
                                                     <IconButton color="error" onClick={() => handleDel(index)}>  <DeleteIcon />  </IconButton>
