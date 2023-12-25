@@ -34,6 +34,7 @@ const App = () => {
             setIsValid(false);
             return;
         }
+        console.log(isValid)
 
         if (!isupdate) {
             setArr([...arr, { exp_name: data.exp_name, price: data.price }]);
