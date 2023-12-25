@@ -1,16 +1,18 @@
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Stack, Fab, IconButton, List, ListItem, ListItemText, Grid, Tooltip, Divider } from "@mui/material";
+import { Stack, Fab, IconButton, List, ListItem, ListItemText, Grid, Tooltip, Divider, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, Alert } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 const App = () => {
 
 
-    const [data, setData] = useState({ exp_name: "", price: "" });
+    const [data, setData] = useState({ exp_name: "", price: null });
     const [arr, setArr] = useState([{ exp_name: "", price: "" }]);
     const [isupdate, setIsUpdate] = useState(false);
     const [id, setId] = useState(null);
+    const [isValid, setIsValid] = useState(true);
+
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -27,9 +29,16 @@ const App = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(data.exp_name.trim().length)
+        if (data.exp_name.trim().length == 0 || data.price == null) {
+            setIsValid(false);
+            return;
+        }
+
         if (!isupdate) {
             setArr([...arr, { exp_name: data.exp_name, price: data.price }]);
             setData({ exp_name: "", price: "" });
+
         } else {
             setArr((prevArr) => prevArr.map((e, i) => {
                 if (i == id) {
@@ -68,6 +77,7 @@ const App = () => {
 
 
 
+
     return (
         <><center>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={{ xs: 2, sm: 2 }}
@@ -76,14 +86,16 @@ const App = () => {
 
                 <TextField label="ExpenseName" type="text" color="secondary" size="small" name="expense" value={data.exp_name} onChange={handleChange} />
                 <TextField label="Price" type="number" color="secondary" size="small" name="price" value={data.price} onChange={handleChange} />
-                <Fab color="secondary" size="small" onClick={handleSubmit}>
+                <Fab size="small" onClick={handleSubmit} sx={{ bgcolor: (isValid == false ? "red" : "purple") }}>
                     <AddIcon />
                 </Fab>
 
             </Stack>
+
         </center>
 
-            <Stack >
+            {/* List  */}
+            {/*  <Stack >
                 {
                     arr.map((item, index) => {
                         return (
@@ -104,7 +116,7 @@ const App = () => {
                                                 </Tooltip>
 
                                                 <Tooltip title="Edit" placement="top">
-                                                    <IconButton color="error" onClick={() => handleUpdate(index)}><EditIcon /></IconButton>
+                                                    <IconButton color="success" onClick={() => handleUpdate(index)}><EditIcon /></IconButton>
                                                 </Tooltip>
                                             </ListItem>
                                         </List>
@@ -117,7 +129,44 @@ const App = () => {
                     })
                 }
             </Stack >
+            */}
 
+            <TableContainer component={Paper} sx={{ color: "white", border: 1 }}>
+                <Table >
+                    <TableHead sx={{ bgcolor: "#AFC8AD", fontWeight: "bold" }}>
+                        <TableRow>
+
+                            <TableCell>Expense_Name</TableCell>
+                            <TableCell>Price</TableCell>
+                            <TableCell>Delete/Edit</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            arr?.map((item, i) => {
+                                return (
+                                    <>
+                                        <TableRow>
+
+                                            <TableCell>{item?.exp_name}</TableCell>
+                                            <TableCell>{item?.price}</TableCell>
+                                            <TableCell> <Tooltip title="Delete" placement="top">
+                                                <IconButton color="error" onClick={() => handleDel(i)}>  <DeleteIcon />  </IconButton>
+                                            </Tooltip>
+                                                <Tooltip title="Edit" placement="top">
+                                                    <IconButton color="success" onClick={() => handleUpdate(i)}><EditIcon /></IconButton>
+                                                </Tooltip>
+                                            </TableCell>
+
+                                        </TableRow>
+                                    </>
+                                )
+                            })
+                        }
+
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
         </>
     )
