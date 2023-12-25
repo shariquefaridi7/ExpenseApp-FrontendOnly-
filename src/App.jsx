@@ -13,8 +13,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 const App = () => {
 
 
-  const [data, setData] = useState({ exp_name: "", price: null });
-  const [arr, setArr] = useState([{ exp_name: "", price: "" }]);
+  const [data, setData] = useState({ exp_name: "", price: null, cname: "" });
+  const [arr, setArr] = useState([{ exp_name: "", price: "", cname: "" }]);
   const [isupdate, setIsUpdate] = useState(false);
   const [id, setId] = useState(null);
   const [isValid, setIsValid] = useState(false);
@@ -27,8 +27,10 @@ const App = () => {
     let value = e.target.value;
     if (name == 'expense') {
       setData({ ...data, exp_name: value })
-    } else {
+    } else if (name == 'price') {
       setData({ ...data, price: value })
+    } else {
+      setData({ ...data, cname: value })
     }
 
   }
@@ -37,7 +39,7 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (data.exp_name.trim().length == 0 || data.price == "") {
+    if (data.exp_name.trim().length == 0 || data.price == "" || data.cname.trim().length == 0) {
       setIsValid(true);
 
       return;
@@ -50,20 +52,20 @@ const App = () => {
 
     if (!isupdate) {
 
-      setArr([...arr, { exp_name: data.exp_name, price: data.price }]);
-      setData({ exp_name: "", price: "" });
+      setArr([...arr, { exp_name: data.exp_name, price: data.price, cname: data.cname }]);
+      setData({ exp_name: "", price: "", cname: "" });
 
     } else {
 
       setArr((prevArr) => prevArr.map((e, i) => {
         if (i == id) {
-          return { ...e, exp_name: data.exp_name, price: data.price };
+          return { ...e, exp_name: data.exp_name, price: data.price, cname: data.cname };
         } else {
           return e;
         }
 
       }));
-      setData({ exp_name: "", price: "" });
+      setData({ exp_name: "", price: "", cname: "" });
       setIsUpdate(false)
 
     }
@@ -83,8 +85,8 @@ const App = () => {
         return e
       }
     });
-    console.log(exp)
-    setData({ exp_name: exp[0].exp_name, price: exp[0].price });
+
+    setData({ exp_name: exp[0].exp_name, price: exp[0].price, cname: exp[0].cname });
     setIsUpdate(true);
     setId(id)
 
@@ -103,6 +105,8 @@ const App = () => {
 
         <TextField label="Username" type="text" bgcolor="red" color="secondary" size="small" name="expense" value={data.exp_name} onChange={handleChange} />
         <TextField label="Age(Year)" type="number" color="secondary" size="small" name="price" value={data.price} onChange={handleChange} />
+        <TextField label="Collegename" type="text" color="secondary" size="small" name="cname" value={data.cname} onChange={handleChange} />
+
         <Fab size="small" onClick={handleSubmit} color="secondary">
           <AddIcon />
         </Fab>
@@ -118,6 +122,7 @@ const App = () => {
 
               <TableCell>Username</TableCell>
               <TableCell>Age(Year)</TableCell>
+              <TableCell>Collegename</TableCell>
               <TableCell>Delete/Edit</TableCell>
             </TableRow>
           </TableHead>
@@ -131,6 +136,7 @@ const App = () => {
 
                       <TableCell>{item?.exp_name}</TableCell>
                       <TableCell>{item?.price}</TableCell>
+                      <TableCell>{item?.cname}</TableCell>
                       <TableCell> <Tooltip title="Delete" placement="top">
                         <IconButton color="error" onClick={() => handleDel(i)}>  <DeleteIcon />  </IconButton>
                       </Tooltip>
