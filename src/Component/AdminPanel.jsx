@@ -16,7 +16,7 @@ const AdminPanel = () => {
     const [arr, setArr] = useState([{ id: "", exp_name: "", price: "", cname: "" }]);
     const [isValid, setIsValid] = useState(false);
     const [isAge, setIsAge] = useState(false);
-
+    const [total, setTotal] = useState(0)
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -51,15 +51,18 @@ const AdminPanel = () => {
 
         localStorage.setItem(data.id, JSON.stringify(data));
         const dataObj = JSON.parse(localStorage.getItem(data.id));
-
+        setTotal(total + parseInt(dataObj.price));
         setArr([...arr, { exp_name: dataObj.exp_name, price: dataObj.price, cname: dataObj.cname, id: dataObj.id }]);
         setData({ exp_name: "", price: "", cname: "", id: "" });
     }
 
 
     const handleDel = (id, ID) => {
-        localStorage.removeItem(id);
         setArr((prevArr) => prevArr.filter((e, i) => i != ID));
+        const dataObj = JSON.parse(localStorage.getItem(id));
+        setTotal(total - parseInt(dataObj.price));
+        localStorage.removeItem(id);
+
 
     }
 
@@ -70,7 +73,7 @@ const AdminPanel = () => {
                 sx={{ display: "inline-flex", mt: 2, bgcolor: "#FFECD6", p: 3, mb: 3, borderRadius: 5, }}
             >
                 <TextField label="OrderId" type="number" color="secondary" size="small" name="id" value={data.id} onChange={handleChange} />
-                <TextField label="Prodectname" type="text" color="secondary" size="small" name="expense" value={data.exp_name} onChange={handleChange} />
+                <TextField label="Prodect" type="text" color="secondary" size="small" name="expense" value={data.exp_name} onChange={handleChange} />
                 <TextField label="Price" type="number" color="secondary" size="small" name="price" value={data.price} onChange={handleChange} />
                 <TextField label="Category" type="text" color="secondary" size="small" name="cname" value={data.cname} onChange={handleChange} />
 
@@ -119,8 +122,12 @@ const AdminPanel = () => {
                         }
 
                     </TableBody>
+
                 </Table>
+
             </TableContainer>
+            <h3 style={{ textAlign: "right" }}>Total Amount :{total}</h3>
+
 
             {/* Dialog Box  for Valid Input*/}
 
